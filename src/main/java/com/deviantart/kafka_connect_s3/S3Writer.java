@@ -71,8 +71,8 @@ public class S3Writer {
 
   public long putChunk(String localDataFile, String localIndexFile, TopicPartition tp) throws IOException {
     // Put data file then index, then finally update/create the last_index_file marker
-    String dataFileKey = this.getChunkFileKey(localDataFile);
-    String idxFileKey = this.getChunkFileKey(localIndexFile);
+    String dataFileKey = this.getChunkFileKey(localDataFile, tp);
+    String idxFileKey = this.getChunkFileKey(localIndexFile, tp);
     // Read offset first since we'll delete the file after upload
     long nextOffset = getNextOffsetFromIndexFileContents(new FileReader(localIndexFile));
 
@@ -151,14 +151,15 @@ public class S3Writer {
 
   // We store chunk files with a date prefix just to make finding them and navigating around the bucket a bit easier
   // date is meaningless other than "when this was uploaded"
-  private String getChunkFileKey(String localFilePath) {
+  private String getChunkFileKey(String localFilePath, TopicPartition tp) {
     Path p = Paths.get(localFilePath);
     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-    return String.format("%s%s/%s", keyPrefix, df.format(new Date()), p.getFileName().toString());
+    return String.format("%s%s/%s/%s", keyPrefix, df.format(new Date()), tp.topic(), p.getFileName().toString());
   }
 
   private String getTopicPartitionLastIndexFileKey(TopicPartition tp) {
-    return String.format("%slast_chunk_index.%s-%05d.txt", this.keyPrefix, tp.topic(), tp.partition());
+    System.out.println(String.format("%slast_chunk_index.%s-%05d.txt", this.keyPrefix, tp.topic(), tp.partition()));
+    return String.format("%s/indexes/last_chunk_index.%s-%05d.txt", this.keyPrefix, tp.topic(), tp.partition());
   }
 
   private void updateCursorFile(String lastIndexFileKey, TopicPartition tp) throws IOException {

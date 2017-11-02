@@ -166,7 +166,7 @@ public class S3SinkTask extends SinkTask {
           writer.close();
           writer.delete();
         } catch (IOException ioe) {
-          throw new ConnectException("Failed to resume TopicPartition form S3", ioe);
+          throw new ConnectException("Failed to resume TopicPartition from S3", ioe);
         }
       }
     }
