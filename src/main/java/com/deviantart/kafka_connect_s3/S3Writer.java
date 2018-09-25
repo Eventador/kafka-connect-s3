@@ -158,8 +158,8 @@ public class S3Writer {
   }
 
   private String getTopicPartitionLastIndexFileKey(TopicPartition tp) {
-    System.out.println(String.format("%slast_chunk_index.%s-%05d.txt", this.keyPrefix, tp.topic(), tp.partition()));
-    return String.format("%s/indexes/last_chunk_index.%s-%05d.txt", this.keyPrefix, tp.topic(), tp.partition());
+    System.out.println(String.format("%sindexes/last_chunk_index.%s-%05d.txt", this.keyPrefix, tp.topic(), tp.partition()));
+    return String.format("%sindexes/last_chunk_index.%s-%05d.txt", this.keyPrefix, tp.topic(), tp.partition());
   }
 
   private void updateCursorFile(String lastIndexFileKey, TopicPartition tp) throws IOException {
