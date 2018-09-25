@@ -153,8 +153,8 @@ public class S3Writer {
   // date is meaningless other than "when this was uploaded"
   private String getChunkFileKey(String localFilePath, TopicPartition tp) {
     Path p = Paths.get(localFilePath);
-    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-    return String.format("%s%s/%s/%s", keyPrefix, df.format(new Date()), tp.topic(), p.getFileName().toString());
+    SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd/HH");
+    return String.format("%s%s/%s/%s", this.keyPrefix, df.format(new Date()), tp.topic(), p.getFileName().toString());
   }
 
   private String getTopicPartitionLastIndexFileKey(TopicPartition tp) {
