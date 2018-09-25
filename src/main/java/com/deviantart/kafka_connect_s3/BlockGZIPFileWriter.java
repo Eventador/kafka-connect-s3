@@ -38,6 +38,7 @@ import org.json.simple.JSONObject;
  * with any regular GZIP decoding library or program.
  */
 public class BlockGZIPFileWriter {
+  private String date_string;
   private String filenameBase;
   private String path;
   private GZIPOutputStream gzipStream;
@@ -101,6 +102,8 @@ public class BlockGZIPFileWriter {
   public BlockGZIPFileWriter(String filenameBase, String path, long firstRecordOffset, long chunkThreshold)
   throws FileNotFoundException, IOException
   {
+    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+    this.date_string = df.format(new Date());
     this.filenameBase = filenameBase;
     this.path = path;
     this.firstRecordOffset = firstRecordOffset;
@@ -139,12 +142,12 @@ public class BlockGZIPFileWriter {
 
   public String getDataFileName() {
     // Puts date the file was generated into the name before the the partition identifier
-    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-    return String.format("%s-%s-%012d.gz", df.format(new Date()), filenameBase, firstRecordOffset);
+    return String.format("%s-%s-%012d.gz", this.date_string, filenameBase, firstRecordOffset);
   }
 
   public String getIndexFileName() {
-    return String.format("%s-%012d.index.json", filenameBase, firstRecordOffset);
+    // Puts date the file was generated into the name before the the partition identifier
+    return String.format("%s-%s-%012d.index.json", this.date_string, filenameBase, firstRecordOffset);
   }
 
   public String getDataFilePath() {
