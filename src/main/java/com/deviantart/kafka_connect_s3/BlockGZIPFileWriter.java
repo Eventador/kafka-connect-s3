@@ -12,7 +12,9 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.zip.GZIPOutputStream;
 
 import org.json.simple.JSONArray;
@@ -136,7 +138,9 @@ public class BlockGZIPFileWriter {
   }
 
   public String getDataFileName() {
-    return String.format("%s-%012d.gz", filenameBase, firstRecordOffset);
+    // Puts date the file was generated into the name before the the partition identifier
+    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+    return String.format("%s-%s-%012d.gz", df.format(new Date()), filenameBase, firstRecordOffset);
   }
 
   public String getIndexFileName() {
